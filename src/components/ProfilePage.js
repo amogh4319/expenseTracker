@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState ,useEffect} from 'react';
 import { Card,Form,Button, FormControl } from 'react-bootstrap';
 import './ProfilePage.css'
 import AuthContext from '../store/authContext';
@@ -12,10 +12,44 @@ function ProfilePage() {
     const photoHandler=(event)=>{
         setPhotoUrl(event.target.value);
     }
+    useEffect(() => {
+      // Fetch user profile data using idToken
+      const fetchUserProfile = async () => {
+        try {
+          const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA51EecfJp7QewP5lK4328whRsJUwpBUdk`, {
+            method: 'POST',
+            body: JSON.stringify({
+              idToken: ctx.token,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to fetch profile data.');
+          }
+  
+          const data = await response.json();
+  
+          if (data.users && data.users.length > 0) {
+            const userData = data.users[0];
+            setFullname(userData.displayName || '');
+            setPhotoUrl(userData.photoUrl || '');
+          }
+        } catch (error) {
+          console.error(error.message);
+        }
+      };
+  
+      fetchUserProfile();
+    }, [ctx.token]);
     const submission=async(event)=>{
         event.preventDefault();
         console.log(fullname,photo);
         try{
+         
+
         const res=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyA51EecfJp7QewP5lK4328whRsJUwpBUdk',{
             method:'POST',
             body:JSON.stringify({
