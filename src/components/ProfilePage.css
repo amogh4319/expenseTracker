@@ -1,0 +1,11 @@
+.div.card{
+    display: flex;
+    justify-content: flex-end;
+    align-self: end;
+    margin-left: 75%;
+    background-color:yellow;
+}
+.div.section{
+    
+    margin-left: 50%;
+}

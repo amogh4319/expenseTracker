@@ -1,8 +1,12 @@
 .card{
     width:25%;
-    
+    text-align: center;
     margin:auto
 }
 .form{
     width:100%;
+    align-content: center;
+}
+.btn{
+    margin-left: 45%;
 }

@@ -1,0 +1,6 @@
+.p{
+    display: flex;
+  justify-content: flex-end;
+  margin-left: 75%;
+  background-color: rgb(231, 175, 135);
+}

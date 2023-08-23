@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {Button, FormControl,Card,Form, Spinner} from 'react-bootstrap';
 import './SignUp.css';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../../store/authContext';
 function SignUpPage(props) {
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
     const [confirm,setConfirm]=useState('');
     const [isLogin,setIsLogin]=useState(false);
     const [isLoading,setIsLoading]=useState(false);
+    const ctx=useContext(AuthContext);
     const history=useNavigate();
     const emailHandler=(event)=>{
         setEmail(event.target.value);
@@ -53,6 +55,7 @@ function SignUpPage(props) {
             }
             const data=await response.json();
             console.log(data);
+            ctx.logIn(data.idToken)
             history('/welcome')
             }catch(error){
                 console.error(error.message);
@@ -62,20 +65,20 @@ function SignUpPage(props) {
   return (
     <div>
       <Card className='card mt-5 shadow fluid'>
-        <Card.Title>Sign Up</Card.Title>
+        <Card.Title>{isLogin?'Log In':'Sign Up'}</Card.Title>
         <Card.Body>
             <Form className='form' onSubmit={submission}>
                 <FormControl type='email' placeholder='EMAIL' className='mb-3'required onChange={emailHandler}/>
                 <FormControl type='password' placeholder='PASSWORD'  className='mb-3' required onChange={passwordHandler}/>
                 {!isLogin&&<FormControl type='password' placeholder='CONFIRM PASSWORD' className='mb-3' required onChange={confirmHandler}/>}
-                {!isLoading&&<Button type='submit'>{isLogin?'Log In':'Sign Up'}</Button>}
+                {!isLoading&&<Button type='submit' style={{margin:'auto'}}>{isLogin?'Log In':'Sign Up'}</Button>}
                 {isLoading&&<Spinner animation="border" variant="success" />}
             </Form>
         </Card.Body>
       </Card>
-      <Card>
-        <Button type='button' onClick={toggle} className='mt-3' variant='warning'>Have an account?Login</Button>
-      </Card>
+      
+        <Button type='button' onClick={toggle} className='btn mt-3' variant='warning'>Have an account?Login</Button>
+      
     </div>
   );
 }
