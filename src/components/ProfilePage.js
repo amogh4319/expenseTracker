@@ -2,9 +2,13 @@ import React, { useContext, useState ,useEffect} from 'react';
 import { Card,Form,Button, FormControl } from 'react-bootstrap';
 import './ProfilePage.css'
 import AuthContext from '../store/authContext';
+const nameLoader=JSON.parse(localStorage.getItem('fullname'));
+const photoLoader=JSON.parse(localStorage.getItem('photo'));
+
 function ProfilePage() {
-    const [fullname,setFullname]=useState('');
-    const [photo,setPhotoUrl]=useState('');
+  
+    const [fullname,setFullname]=useState(nameLoader);
+    const [photo,setPhotoUrl]=useState(photoLoader);
   const ctx=useContext(AuthContext);
     const fullnameHandler=(event)=>{
         setFullname(event.target.value);
@@ -31,7 +35,7 @@ function ProfilePage() {
           }
   
           const data = await response.json();
-  console.log(data);
+            console.log(data);
           if (data.users && data.users.length > 0) {
             const userData = data.users[0];
             setFullname(userData.displayName || '');
@@ -47,6 +51,8 @@ function ProfilePage() {
     const submission=async(event)=>{
         event.preventDefault();
         console.log(fullname,photo);
+        localStorage.setItem('fullname',JSON.stringify(fullname));
+        localStorage.setItem('photo',JSON.stringify(photo));
         try{
          
 
