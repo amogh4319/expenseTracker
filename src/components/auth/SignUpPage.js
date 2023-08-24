@@ -61,7 +61,7 @@ function SignUpPage(props) {
             }
             const data=await response.json();
             console.log(data);
-            ctx.logIn(data.idToken)
+            ctx.logIn(data.idToken,email)
             history('/verifyEmail');
             // history('/welcome')
             }catch(error){

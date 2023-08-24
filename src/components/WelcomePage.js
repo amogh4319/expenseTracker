@@ -1,4 +1,4 @@
-import React, { useContext, useState} from 'react';
+import React, { useContext,useEffect, useState} from 'react';
 import './WelcomePage.css';
 import { Button, Card} from 'react-bootstrap';
 import { Link,useNavigate } from 'react-router-dom';
@@ -12,15 +12,49 @@ function WelcomePage() {
   const logoutPage=()=>{
     ctx.logOut();
     
-    ctx.token='';
+    
     
     history('/');
   }
+
+  useEffect(() => {
+    // Fetch the previously added expenses here
+    const fetchExpenses = async () => {
+      try {
+        const response = await fetch(
+          'https://expensetracker-4e64b-default-rtdb.firebaseio.com/expenseData.json'
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch expenses');
+        }
+
+        const data = await response.json();
+        const loadedExpenses = [];
+
+        for (const key in data) {
+          loadedExpenses.push({
+            id: key,
+            money: data[key].money,
+            description: data[key].description,
+            category: data[key].category,
+          });
+        }
+
+        setuserList(loadedExpenses);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchExpenses();
+  }, []); // Run only once on component mount
+  
     const addHandler=(uMoney,uDescription,uCategory)=>{
         setuserList((prevList)=>{
           return  ([...prevList,{money:uMoney,description:uDescription,category:uCategory,id:Math.random().toString()}])
         })
-    }
+      }
 
   return (
     <>

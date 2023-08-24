@@ -15,11 +15,28 @@ function ExpenseForm(props) {
     const categoryHandler=(event)=>{
       setCategory(event.target.value);
     }
-    const submission=(event)=>{
+    const submission=async(event)=>{
         event.preventDefault();
         
         
         props.onAdd(money,description,category);
+        try{
+        const response=await fetch('https://expensetracker-4e64b-default-rtdb.firebaseio.com/expenseData.json',{
+            method:'POST',
+            body:JSON.stringify({money:money,description:description,category:category}),
+            headers:{
+                'Content-Type':'application/json'
+            }
+          })
+          if(!response.ok)
+          {
+                throw new Error('expense is not added')
+          }
+          const data=await response.json();
+          console.log(data);
+      }catch(error){
+        console.error(error.message);
+      }
     }
   
   return (
