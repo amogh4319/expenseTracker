@@ -31,7 +31,7 @@ function ProfilePage() {
           }
   
           const data = await response.json();
-  
+  console.log(data);
           if (data.users && data.users.length > 0) {
             const userData = data.users[0];
             setFullname(userData.displayName || '');

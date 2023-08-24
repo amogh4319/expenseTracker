@@ -56,7 +56,8 @@ function SignUpPage(props) {
             const data=await response.json();
             console.log(data);
             ctx.logIn(data.idToken)
-            history('/welcome')
+            history('/verifyEmail');
+            // history('/welcome')
             }catch(error){
                 console.error(error.message);
             }
@@ -71,7 +72,7 @@ function SignUpPage(props) {
                 <FormControl type='email' placeholder='EMAIL' className='mb-3'required onChange={emailHandler}/>
                 <FormControl type='password' placeholder='PASSWORD'  className='mb-3' required onChange={passwordHandler}/>
                 {!isLogin&&<FormControl type='password' placeholder='CONFIRM PASSWORD' className='mb-3' required onChange={confirmHandler}/>}
-                {!isLoading&&<Button type='submit' style={{margin:'auto'}}>{isLogin?'Log In':'Sign Up'}</Button>}
+                {!isLoading&&<Button type='submit' style={{margin:'auto'}} >{isLogin?'Log In':'Sign Up'}</Button>}
                 {isLoading&&<Spinner animation="border" variant="success" />}
             </Form>
         </Card.Body>
