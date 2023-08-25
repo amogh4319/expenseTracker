@@ -5,9 +5,11 @@ import WelcomePage from './components/WelcomePage';
 import ProfilePage from './components/ProfilePage';
 import {Routes,Route} from 'react-router-dom';
 import VerifyEmail from './components/VerifyEmail';
+import { ProductContextProvider } from './store/ProductContext';
 function App() {
   return (
     <div>
+      <ProductContextProvider>
       <Routes>
         <Route path='/' element={<SignUpPage/>}>
         </Route>
@@ -18,6 +20,7 @@ function App() {
         <Route path='/verifyEmail' element={<VerifyEmail/>}>
         </Route>
       </Routes>
+      </ProductContextProvider>
     </div>
   );
 }

@@ -1,7 +1,9 @@
 import React from 'react';
-import { ListGroup,Badge } from 'react-bootstrap';
+import { ListGroup,Badge, Button } from 'react-bootstrap';
+
 
 function ExpenseList(props) {
+  
   return (
     <div>
        <ListGroup as="ol"  style={{width:'60%',margin:'auto'}} className='mt-3 ' >
@@ -19,7 +21,10 @@ function ExpenseList(props) {
         <Badge bg="warning" pill style={{fontSize:'25px'}}>
         INR:{item.money}
         </Badge>
-            
+        <div>
+        <Button onClick={()=>props.editHandler(item.id)}>Edit</Button>
+        <Button variant='danger' className='mt-3' onClick={()=>props.deleteHandler(item.id)}>Delete</Button>
+        </div> 
           </ListGroup.Item>
           ))}
       </ListGroup>
