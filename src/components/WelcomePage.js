@@ -2,21 +2,25 @@ import React, { useContext,useEffect, useState} from 'react';
 import './WelcomePage.css';
 import { Button, Card} from 'react-bootstrap';
 import { Link,useNavigate } from 'react-router-dom';
-import AuthContext from '../store/authContext';
+
 import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
-import ProductContext from '../store/ProductContext';
+import { useDispatch } from 'react-redux';
+import { expenseActions } from '../store/expense';
+import { authActions } from '../store/auth';
+
 function WelcomePage() {
  const [userList,setuserList]=useState([]);
  const [editingItemId, setEditingItemId] = useState(null);
  const [isEditing,setIsEditing]=useState(false); // New state for editing item
-  const authctx=useContext(AuthContext);
-  const ctx=useContext(ProductContext)
+  
+  const dispatch=useDispatch();
+  
   const history=useNavigate();
   const logoutPage=()=>{
-    authctx.logOut();
     
     
+   dispatch(authActions.logOut())
     
     history('/');
   }
@@ -99,7 +103,8 @@ function WelcomePage() {
     
         console.log("Received ID:", id);
         console.log("Loaded Expenses:", userList);
-        ctx.removeItem(id);
+      
+      dispatch(expenseActions.removeItem(id));
     
         try {
          

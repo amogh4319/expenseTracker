@@ -1,7 +1,8 @@
 import React, { useContext, useState ,useEffect} from 'react';
 import { Card,Form,Button, FormControl } from 'react-bootstrap';
 import './ProfilePage.css'
-import AuthContext from '../store/authContext';
+//import AuthContext from '../store/auth';
+import { useDispatch,useSelector } from 'react-redux';
 const nameLoader=JSON.parse(localStorage.getItem('fullname'));
 const photoLoader=JSON.parse(localStorage.getItem('photo'));
 
@@ -9,7 +10,9 @@ function ProfilePage() {
   
     const [fullname,setFullname]=useState(nameLoader);
     const [photo,setPhotoUrl]=useState(photoLoader);
-  const ctx=useContext(AuthContext);
+  //const ctx=useContext(AuthContext);
+  const token=useSelector(state=>state.auth.token)
+  const dispatch=useDispatch();
     const fullnameHandler=(event)=>{
         setFullname(event.target.value);
     }
@@ -23,7 +26,7 @@ function ProfilePage() {
           const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA51EecfJp7QewP5lK4328whRsJUwpBUdk`, {
             method: 'POST',
             body: JSON.stringify({
-              idToken: ctx.token,
+              idToken:token,
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -47,7 +50,7 @@ function ProfilePage() {
       };
   
       fetchUserProfile();
-    }, [ctx.token]);
+    }, [token]);
     const submission=async(event)=>{
         event.preventDefault();
         console.log(fullname,photo);
@@ -59,7 +62,7 @@ function ProfilePage() {
         const res=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyA51EecfJp7QewP5lK4328whRsJUwpBUdk',{
             method:'POST',
             body:JSON.stringify({
-                idToken:ctx.token,
+                idToken:token,
                 displayName:fullname,
                 photoUrl:photo,
                 returnSecureToken	:true

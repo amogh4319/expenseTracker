@@ -1,8 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, {  useState } from 'react';
 import {Button, FormControl,Card,Form, Spinner} from 'react-bootstrap';
 import './SignUp.css';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../store/authContext';
+//import AuthContext from '../../store/auth';
+import {useDispatch} from 'react-redux';
+import { authActions } from '../../store/auth';
 function SignUpPage(props) {
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
@@ -10,7 +12,8 @@ function SignUpPage(props) {
     const [isLogin,setIsLogin]=useState(false);
     const [isLoading,setIsLoading]=useState(false);
     const [forgot,setForgot]=useState(false);
-    const ctx=useContext(AuthContext);
+   // const ctx=useContext(AuthContext);
+   const dispatch=useDispatch();
     const history=useNavigate();
     const emailHandler=(event)=>{
         setEmail(event.target.value);
@@ -61,7 +64,8 @@ function SignUpPage(props) {
             }
             const data=await response.json();
             console.log(data);
-            ctx.logIn(data.idToken,email)
+           // ctx.logIn(data.idToken,email)
+           dispatch(authActions.logIn(data.idToken))
             history('/verifyEmail');
             // history('/welcome')
             }catch(error){

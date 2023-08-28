@@ -1,14 +1,17 @@
-import React,{useContext, useState,useEffect} from 'react';
+import React,{ useState,useEffect} from 'react';
 import {Card,Form,Container,FormControl,Button} from 'react-bootstrap'
-import ProductContext from '../store/ProductContext';
+import { useDispatch } from 'react-redux';
+import { expenseActions } from '../store/expense';
+
 
 function ExpenseForm(props) {
   const { editingItemId,items,isEditing,setIsEditing } = props; // Receive the editingItemId prop
     const [money,setMoney]=useState('');
     const [description,setDescription]=useState('');
     const [category,setCategory]=useState('');
+    const dispatch=useDispatch();
+     
     
-    const ctx=useContext(ProductContext);
 
     useEffect(() => {
       // If there's an editingItemId, find the specific item and pre-fill the form
@@ -41,7 +44,8 @@ function ExpenseForm(props) {
         setIsEditing(false);
         }
          
-        ctx.addItem({money:money,description:description,category:category})
+        //ctx.addItem({money:money,description:description,category:category})
+          dispatch(expenseActions.addItem({money:money,description:description,category:category}))
         
         props.onAdd(money,description,category);
         setMoney('');
