@@ -1,19 +1,27 @@
-import React, { useContext,useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import './WelcomePage.css';
-import { Button, Card} from 'react-bootstrap';
+import { Button, Card,Form} from 'react-bootstrap';
 import { Link,useNavigate } from 'react-router-dom';
 
 import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { expenseActions } from '../store/expense';
 import { authActions } from '../store/auth';
+import premiumImg from '../assets/premium.png';
+import download from '../assets/download.png';
+import {themeActions} from '../store/theme'
+import sun from '../assets/sunny.png';
+import moon from '../assets/moon.png';
 
 function WelcomePage() {
- const [userList,setuserList]=useState([]);
+  
+  const [userList,setuserList]=useState([]);
  const [editingItemId, setEditingItemId] = useState(null);
  const [isEditing,setIsEditing]=useState(false); // New state for editing item
-  
+ const [show,setShow]=useState(false);
+ const [toggle,setToggle]=useState(false);
+  const showPremiumButton=userList.some(item=>item.money>=10000);
   const dispatch=useDispatch();
   
   const history=useNavigate();
@@ -146,24 +154,56 @@ function WelcomePage() {
         }
       }
 
+      const showtoggle=()=>{
+        setShow(true);
+        setToggle(true);
+      }
+      const downloadHandler=()=>{
+        // Create a CSV string from your expense data
+    const expensesCSV = userList.map(expense => {
+       return `${expense.category},${expense.description},${expense.money}`;
+     }).join('\n');
+    
+     // Create a Blob with the CSV data and trigger download
+     const blob = new Blob([expensesCSV], { type: 'text/csv' });
+     const url = URL.createObjectURL(blob);
+     const a = document.createElement('a');
+     a.href = url;
+     a.download = 'expenses.csv';
+     document.body.appendChild(a);
+     a.click();
+     document.body.removeChild(a);
+     URL.revokeObjectURL(url);
+    }
+    
+    //const showDownloadButton=props.expenses.some(item=>item.money>=10000);
+    const isDarkTheme=useSelector(state=>state.theme.isDarkTheme)
+      const toggleSwitch=()=>{
+        dispatch(themeActions.toggleDarkTheme());
+      }
       
 
   return (
-    <>
-        
-      <h2><i>Welcome to Expense tracker app</i></h2>
+    <div style={{backgroundColor:isDarkTheme?'black':'white'}}>
+        <div style={{backgroundColor:isDarkTheme?'black':'white'}}>
+      <h2 style={{color:isDarkTheme?'white':'black'}}><i>Welcome to Expense tracker app</i></h2>
+      {showPremiumButton&&!toggle?(<Button variant='info'  className='premium-button' ><img src={premiumImg} alt="premium" height={'60px'} width={'60px'} onClick={showtoggle}/></Button>):(show && toggle &&<Form.Check type='switch' style={{marginLeft:'47%',sw:'30px'}} label={<img src={isDarkTheme?sun:moon} alt='sun/moon' height={'30px'} width={'30px'} />} onClick={toggleSwitch}/>)}
+      <div></div>
       <Card className='p' style={{backgroundColor:'pink'}}><p><i>your profile is incomplete <Link to='/profile'>Complete now</Link></i></p></Card>
       <Button variant='danger' onClick={logoutPage}>Log Out</Button>
       <hr/>
+      </div>
       <ExpenseForm 
       onAdd={addHandler}
       editingItemId={editingItemId} 
       items={userList}
       isEditing={isEditing}
       setIsEditing={setIsEditing}
+      
       />
-      <ExpenseList items={userList} deleteHandler={deleteHandler} editHandler={editHandler} />
-    </>
+       {show&&<Button variant={isDarkTheme?'dark':'light'} onClick={downloadHandler} style={{marginLeft:'40%'}}><img src={download} alt='download' width={'50px'} height={'50px'}/>Download Expenses as csv file</Button>}
+      <ExpenseList items={userList} deleteHandler={deleteHandler} editHandler={editHandler} expenses={userList} />
+    </div>
   );
 }
 

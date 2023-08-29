@@ -1,6 +1,6 @@
 import React,{ useState,useEffect} from 'react';
 import {Card,Form,Container,FormControl,Button} from 'react-bootstrap'
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
 import { expenseActions } from '../store/expense';
 
 
@@ -52,19 +52,20 @@ function ExpenseForm(props) {
         setCategory('');
         setDescription('');
         }
+        const isDarkTheme=useSelector(state=>state.theme.isDarkTheme)
     
   
   return (
-    <div>
-        <Container>
-        <Card className='card mt-3 shadow fluid'>
+    <div >
+        <Container >
+        <Card className='card mt-3 shadow fluid' style={{backgroundColor:isDarkTheme?'grey':"white",border: isDarkTheme ? '2px solid white' : '2px solid black'}}>
           <Card.Body>
           <Form onSubmit={submission}>
-            <Form.Label>Money Spent:</Form.Label>
+            <Form.Label style={{color:isDarkTheme?'white':'black'}}>Money Spent:</Form.Label>
             <FormControl type='number' onChange={moneyHandler} value={money}/>
-            <Form.Label>Description:</Form.Label>
+            <Form.Label style={{color:isDarkTheme?'white':'black'}}>Description:</Form.Label>
             <FormControl type='text' onChange={descriptionHandler} value={description}/>
-            <Form.Label>Category:</Form.Label>
+            <Form.Label style={{color:isDarkTheme?'white':'black'}}>Category:</Form.Label>
             <Form.Select aria-label="Default select example" onChange={categoryHandler} value={category}>
               <option>Open this select menu</option>
               <option value="Food">Food</option>
